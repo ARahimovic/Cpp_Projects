@@ -1,6 +1,33 @@
 #include "BookManagement.hpp"
+#include "BookExceptions.hpp"
 
 BookManagement::BookManagement():bookList(){ }
+
+
+Book BookManagement::findBook(const std::string& title)
+{
+    if(title.empty())
+        throw EmptyTitleException();
+
+    try
+    {
+        return bookList.at(title);
+    }
+    catch(const std::out_of_range&)
+    {
+        throw BookNotFoundException();
+    }
+
+    //valid implementation but above is better
+    // auto it = bookList.find(title);
+    // if(it == bookList.end())
+    // {
+    //     throw BookNotFoundException();
+    //     return nullptr;
+    // }
+    // return it.second;
+
+}
 
 void BookManagement::addBook(const Book& myBook)
 {  
@@ -54,7 +81,19 @@ void BookManagement::removeBook(const std::string& title, uint8_t count)
     }
 }
 
-void BookManagement::displayAllBooks()
+std::vector<Book> BookManagement::getAllBooks() const
+{
+    std::vector<Book> books = {};
+
+    for(const auto& book : bookList)
+    {
+        books.push_back(book.second);
+    }
+
+    return books;
+}
+
+void BookManagement::displayAllBooks() const
 {
     for(const auto& book : bookList)
     {
@@ -62,4 +101,80 @@ void BookManagement::displayAllBooks()
         std::cout << std::endl;
     }
 }
+
+
+std::vector<Book> BookManagement::getBooksByAuthor(const std::string& author) const
+{
+    if(author.empty())
+    {
+        throw EmptyAuthorException();
+    }
+    std::vector<Book> authorBooks = {};
+    for(const auto& book : bookList)
+    {
+        if(book.second.getAuthor() == author)
+        {
+            authorBooks.push_back(book.second);
+        }
+    }
+
+    return authorBooks;
+}
+
+std::vector<Book> BookManagement::filterByYear(int year, bool isGreater) const
+{
+    std::vector<Book> books = {};
+    for(const auto& book : bookList)
+    {
+        if( (isGreater && book.second.getReleaseYear() >= year) || ( !isGreater && book.second.getReleaseYear() <= year))
+            books.push_back(book.second);
+        // if(isGreater)
+        // {
+        //     if(book.second.getReleaseYear() >= year)
+        //         books.push_back(book);
+            
+        // }
+        // else
+        // {
+        //     if(book.second.getReleaseYear() <= year)
+        //         books.push_back(book);
+        // }
+    }
+
+    return books;
+}
+
+std::vector<Book> BookManagement::multipleFilters(const std::string& author, int year, bool isGreater) const
+{   
+    std::vector<Book> books = {};
+
+    //no filter applied
+    if(author.empty() && year == 0)
+        return this->getAllBooks();
+
+    //author empty
+    else if (author.empty() && year != 0)
+    {
+        return this->filterByYear(year, isGreater);
+    }
+    else if (year == 0 && !author.empty())
+    {
+        return this->getBooksByAuthor(author);
+    }
+
+    //use both filters
+    for(const auto& book : bookList)
+    {
+        if (book.second.getAuthor() == author)
+        {
+            if ((book.second.getReleaseYear() >= year && isGreater) || (book.second.getReleaseYear() <= year && !isGreater))
+                books.push_back(book.second);
+        }
+        
+    }
+
+    return books;
+}
+
+
 

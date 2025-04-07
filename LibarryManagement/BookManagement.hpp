@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 #include "Book.hpp"
 
 using namespace std;
@@ -23,9 +24,13 @@ class BookManagement
         void addBook(const std::string& title, const std::string& author, uint16_t year = 0000, uint16_t count = 1);
         void addBook(const Book& myBook);
         void removeBook(const std::string& title, uint8_t count = 1);
+        Book findBook(const std::string& title);
         void removeAllBooks();
-        void displayAllBooks();
-    
+        void displayAllBooks() const;
+        std::vector<Book> getAllBooks() const;
+        std::vector<Book> getBooksByAuthor(const std::string& author) const;
+        std::vector<Book> filterByYear(int year = 0, bool isGreater = true) const;
+        std::vector<Book> multipleFilters(const std::string& author = "", int year = 0, bool isGreater=true) const;
 
     private:
         std::unordered_map<std::string, Book> bookList;
