@@ -1,21 +1,34 @@
 #include "BankAccount.hpp"
+#include "BankException.hpp"
+#include <iostream>
 
-BankAccount::BankAccount(std::string name, std::string account, float balance):accountName(name), accountId(account),accountBalance(balance){}
+BankAccount::BankAccount(const std::string& name, const std::string& account, float balance):accountName(name), accountId(account),accountBalance(balance){}
+BankAccount::BankAccount() : accountName(""), accountId(""), accountBalance(0.0f) {}
 
-std::string getAccountName() const {return this->accountName; }
-std::string getAccountID() const {return this->accountId; }
-float getBalance() const {return this->accountBalance; }
-void withdraw(uint16_t amount)
+const std::string& BankAccount::getAccountName() const {return this->accountName; }
+const std::string& BankAccount::getAccountID() const {return this->accountId; }
+float BankAccount::getBalance() const {return this->accountBalance; }
+void BankAccount::withdraw(uint16_t amount)
 {
     if(accountBalance < amount)
     {
         std::cout << "NO sufficient funds" << std::endl;
-        throw BANK_EXCEPTION
+        throw InsufficientFunds();
     }
     accountBalance -= amount;
 }
 
-void deposit(uint16_t amount)
+void BankAccount::deposit(uint16_t amount)
 {
     accountBalance += amount;
+}
+
+
+void BankAccount::setName(const std::string& name)
+{
+    if(name.empty())
+    {
+        throw BankException("Name cannot be empty");
+    }
+    accountName = name;
 }

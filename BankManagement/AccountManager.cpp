@@ -1,15 +1,11 @@
 #include "AccountManager.hpp"
+#include "BankException.hpp"
 #include <iostream>
 
-void AccountManager::addAccount(BankAccount account)
+void AccountManager::addAccount(const BankAccount& account)
 {
-    if(account == nullptr)
-    {
-        std::cout << " error, bank account null" << std::endl;
-        throw BankException("Account is null");
-    }
-
-    auto it = bankAccounts.find(account.getAccountID())
+    
+    auto it = bankAccounts.find(account.getAccountID());
     if(it != bankAccounts.end())
     {
         std::cout << "Bank account alreay exists" << std::endl;
@@ -19,22 +15,33 @@ void AccountManager::addAccount(BankAccount account)
     bankAccounts[account.getAccountID()] = account;
 }
 
-void AccountManager::addAccount(std::string name, std::string id, float balance);
+void AccountManager::addAccount(const std::string& name, const std::string& id, float balance)
 {
+   
+    if(name.empty() || id.empty())
+    {
+        throw BankException("name or ID cannot be empty");
+    }
+    
     BankAccount account(name, id, balance);
-    bankAccounts[id] = account;
+    addAccount(account);
 }
 
-BankAccount* AccountManager::getAccount(std::string accountId) const
+const BankAccount* AccountManager::getAccount(const std::string& accountId) const
 {
     if(accountId.empty())
     {
         std::cout << " account Id cannot be empty" << std::endl;
+        throw BankException("Account ID cannot be empty");
     }
 
-    auto it = bookAccounts.find(accountId);
-
-    return it == bookAccount.end() ? nullptr : &(it->second);
+    auto it = findAccount(accountId);
+    
+    if(it == bankAccounts.end())
+    {
+        return nullptr;
+    }
+    return &(it->second);
 }
 
 std::vector<const BankAccount*> AccountManager::getAllAccounts() const
@@ -50,11 +57,25 @@ std::vector<const BankAccount*> AccountManager::getAllAccounts() const
 }
 
 
-void AccountManager::removeAccount(std::string accountId)
+void AccountManager::removeAccount(const std::string& accountId)
 {
-    auto it = bankAccounts.find(accountId);
+    
+    auto it = findAccount(accountId);
     if(it == bankAccounts.end())
-        throw AccountNotFoundException();
-
+        throw BankException("Account not found");
+    
     bankAccounts.erase(it);
 }
+
+
+std::unordered_map<std::string, BankAccount>::const_iterator AccountManager::findAccount(const std::string& accountId) const
+{
+    return bankAccounts.find(accountId);
+}
+
+bool AccountManager::accountExists(const std::string& accountId)
+{
+    auto it = findAccount(accountId);
+    return it != bankAccounts.end();
+}
+
