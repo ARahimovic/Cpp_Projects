@@ -1,4 +1,4 @@
-#ifndef BANK_ACOUNT
+#ifndef BANK_ACCOUNT
 #define BANK_ACCOUNT
 
 #include <string>
@@ -12,9 +12,10 @@ class BankAccount
         const std::string& getAccountName() const;
         const std::string& getAccountID() const;
         float getBalance() const;
-        void deposit(uint16_t amount);
-        void withdraw(uint16_t amount);
+        void deposit(float amount);
+        void withdraw(float amount);
         void setName(const std::string& name);
+        void displayAccount() const;
 
     private:
         std::string accountName;

@@ -17,21 +17,14 @@ void AccountManager::addAccount(const BankAccount& account)
 
 void AccountManager::addAccount(const std::string& name, const std::string& id, float balance)
 {
-   
-    if(name.empty() || id.empty())
-    {
-        throw BankException("name or ID cannot be empty");
-    }
-    
     BankAccount account(name, id, balance);
     addAccount(account);
 }
 
-const BankAccount* AccountManager::getAccount(const std::string& accountId) const
+const BankAccount* AccountManager::getAccount(const std::string& accountId)
 {
     if(accountId.empty())
     {
-        std::cout << " account Id cannot be empty" << std::endl;
         throw BankException("Account ID cannot be empty");
     }
 
@@ -44,7 +37,7 @@ const BankAccount* AccountManager::getAccount(const std::string& accountId) cons
     return &(it->second);
 }
 
-std::vector<const BankAccount*> AccountManager::getAllAccounts() const
+std::vector<const BankAccount*> AccountManager::getAllAccounts()
 {
     std::vector<const BankAccount*> allAccounts;
 
@@ -68,7 +61,7 @@ void AccountManager::removeAccount(const std::string& accountId)
 }
 
 
-std::unordered_map<std::string, BankAccount>::const_iterator AccountManager::findAccount(const std::string& accountId) const
+std::unordered_map<std::string, BankAccount>::iterator AccountManager::findAccount(const std::string& accountId)
 {
     return bankAccounts.find(accountId);
 }
@@ -79,3 +72,21 @@ bool AccountManager::accountExists(const std::string& accountId)
     return it != bankAccounts.end();
 }
 
+void AccountManager:: withdrawFromAccount(const std::string& accountId, float amount)
+{
+    auto it = findAccount(accountId);
+    if(it == bankAccounts.end())
+        throw BankException("Account not found");
+
+    it->second.withdraw(amount);
+}
+
+
+void AccountManager::depositIntoAccount(const std::string& accountId, float amount)
+{
+    auto it = findAccount(accountId);
+    if(it == bankAccounts.end())
+        throw BankException("Account not found");
+
+    it->second.deposit(amount);
+}

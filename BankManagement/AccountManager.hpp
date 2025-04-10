@@ -12,10 +12,12 @@ class AccountManager
         void addAccount(const BankAccount& bankAccount);
         void addAccount(const std::string& name, const std::string& id, float balance);
         void removeAccount(const std::string& accountId);
-        const BankAccount* getAccount(const std::string& accountId) const;
-        std::vector<const BankAccount*> getAllAccounts() const;
+        const BankAccount* getAccount(const std::string& accountId);
+        std::vector<const BankAccount*> getAllAccounts();
         bool accountExists(const std::string& accountId);
-        std::unordered_map<std::string, BankAccount>::const_iterator findAccount(const std::string& accountId) const;
+        std::unordered_map<std::string, BankAccount>::iterator findAccount(const std::string& accountId);
+        void withdrawFromAccount(const std::string& accountId, float amount);
+        void depositIntoAccount(const std::string& accountId, float amount);
 
 
     private:
