@@ -6,9 +6,11 @@
 class User
 {
     public:
+        User();
         User(const std::string& name, const Date& date);
         void borrowBook(const std::string& bookTitle);
         void returnBook(const std::string& bookTitle);
+        const std::vector<std::string>& getBorrowedBooks() const;
 
     private:
         std::string name;

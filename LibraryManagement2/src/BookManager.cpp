@@ -1,6 +1,7 @@
 #include "BookManager.hpp"
+#include "BookException.hpp"
 
-std::unordered_map<std::string, Book>::iterator findBook(const std::string& title)
+std::unordered_map<std::string, Book>::iterator BookManager::findBook(const std::string& title)
 {
     auto it  = bookList.find(title);
     return it;
@@ -19,10 +20,11 @@ void BookManager::createBook(const std::string& title, const std::string& author
 
 void BookManager::deleteBook(const std::string& title)
 {
-    if(findBook(title) == bookList.end())
+    auto it = findBook(title); 
+    if(it == bookList.end())
         throw BookException("Book doesnt Exist, cant remove something non-existant");
 
-    bookList.erase(title);
+    bookList.erase(it);
 }
 
 void BookManager::addBookCopies(const std::string& title, uint8_t copies)

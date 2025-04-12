@@ -1,4 +1,6 @@
 #include "Book.hpp"
+#include "BookException.hpp"
+
 
 Book::Book():title("init"), author("init"), publicationYear(MIN_PUBLICATION_YEAR){}
 
