@@ -9,12 +9,11 @@ void UserManager::createUser(const std::string& name, const Date& birthDate)
     if(!birthDate.isDateValid())
         throw BookException("UserManager::createUser(const std::string& name, const Date& birthDate) , birth Date not valid");
     
-    auto it = userMap.find(name);
-    if(it != userMap.end())
+    auto it = usersMap.find(name);
+    if(it != usersMap.end())
         throw BookException("UserManager::createUser(const std::string& name, const Date& birthDate) , User already exists"); 
     
-    User newUser(name, birthDate);
-    userMap[name] = newUser;
+    usersMap.emplace(name, User(name, birthDate));
 }
 
 void UserManager::removeUser(const std::string& name)
@@ -22,11 +21,11 @@ void UserManager::removeUser(const std::string& name)
     if(name.empty())
         throw BookException("UserManager::removeUser(const std::string& name) , user name cannot be empty");
 
-    auto it = userMap.find(name);
-    if(it == userMap.end())
-        throw BookException("UserManager::createUser(const std::string& name) , User does not exists , cant remove"); 
+    auto it = usersMap.find(name);
+    if(it == usersMap.end())
+        throw BookException("UserManager::removeUser(const std::string& name) , User does not exists , cant remove"); 
     
-   userMap.erase(it);
+   usersMap.erase(it);
 }
 
 
@@ -35,8 +34,8 @@ User& UserManager::getUser(const std::string& name)
     if(name.empty())
         throw BookException("UserManager::getUser(const std::string& name) , user name cannot be empty");
 
-    auto it = userMap.find(name);
-    if(it == userMap.end())
+    auto it = usersMap.find(name);
+    if(it == usersMap.end())
         throw BookException("UserManager::getUser(const std::string& name) , User does not exists"); 
     
     return it->second;
@@ -45,8 +44,63 @@ User& UserManager::getUser(const std::string& name)
 bool UserManager::userExists(const std::string& name) const
 {
     if(name.empty())
-        throw BookException("UserManager::getUser(const std::string& name) , user name cannot be empty");
+        throw BookException("UserManager::userExists(const std::string& name) , user name cannot be empty");
 
-    return userMap.find(name)!= userMap.end();
+    return usersMap.find(name)!= usersMap.end();
 }
+
+void UserManager::userBorrowBook(const std::string& name, const std::string& bookTitle)
+{
+    if(name.empty())
+        throw BookException("UserManager::userBorrowBook , user name cannot be empty");
+
+    if(bookTitle.empty())
+        throw BookException("UserManager::userBorrowBook , bookTitle cannot be empty");
+
+    auto it = usersMap.find(name);
+    if(it == usersMap.end())
+        throw BookException("UserManager::userBorrowBook() , User does not exists"); 
+
+    it->second.borrowBook(bookTitle);
+}
+
+
+void UserManager::userReturnBook(const std::string& name, const std::string& bookTitle)
+{
+    if(name.empty())
+        throw BookException("UserManager::userReturnBook , user name cannot be empty");
+
+    if(bookTitle.empty())
+        throw BookException("UserManager::userReturnBook , bookTitle cannot be empty");
+
+    auto it = usersMap.find(name);
+    if(it == usersMap.end())
+        throw BookException("UserManager::userReturnBook() , User does not exists"); 
+
+    it->second.returnBook(bookTitle);
+}
+
+
+void UserManager::displayUser(const std::string& name) const
+{
+    if(name.empty())
+        throw BookException("UserManager::displayUser , user name cannot be empty");
+
+    auto it = usersMap.find(name);
+    if(it == usersMap.end())
+        throw BookException("UserManager::displayUser() , User does not exists");
+        
+    it->second.displayUser();
+}
+
+
+void UserManager::displayAllUsers()const
+{
+   for(const auto& user : usersMap)
+   {
+        user.second.displayUser();
+   }
+}
+
+
 

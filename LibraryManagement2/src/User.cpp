@@ -1,7 +1,7 @@
 #include "User.hpp"
 #include "BookException.hpp"
 #include <algorithm>
-
+#include <iostream>
 
 User::User():name("Unvalid"),birthDate(Date()){}
 User::User(const std::string& name, const Date& date):name(name), birthDate(date){}
@@ -46,3 +46,7 @@ const std::vector<std::string>& User::getBorrowedBooks() const
     return borrowedBooksList;
 }
 
+void User::displayUser() const
+{
+    std::cout << "User name : " << name << " birth Date : " << birthDate << std::endl;
+}

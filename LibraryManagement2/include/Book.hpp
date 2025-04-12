@@ -14,11 +14,14 @@ class Book
         std::string getTitle() const;
         std::string getAuthor() const;
         uint16_t getPublicationYear() const;
-        bool isBookAvailable();
+        bool isBookAvailable() const;
         void addCopies(uint16_t number);
         void removeCopies(uint16_t number);
         void borrowBook();
         void returnBook();
+        uint16_t getTotalCopies() const;
+        uint16_t getAvailableCopies() const;
+        void displayBook() const;
 
     private :
         std::string title;

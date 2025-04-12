@@ -1,6 +1,6 @@
 #include "Book.hpp"
 #include "BookException.hpp"
-
+#include <iostream>
 
 Book::Book():title("init"), author("init"), publicationYear(MIN_PUBLICATION_YEAR){}
 
@@ -23,7 +23,7 @@ Book::Book(const std::string& title, const std::string& author, uint16_t year)
 std::string Book::getTitle() const {return title;}
 std::string Book::getAuthor() const {return author;}
 uint16_t Book::getPublicationYear() const {return publicationYear;}
-bool Book::isBookAvailable(){ return availableCopies != 0;}
+bool Book::isBookAvailable() const { return availableCopies != 0;}
 
 void Book::addCopies(uint16_t number)
 {
@@ -61,4 +61,12 @@ void Book::returnBook()
         availableCopies++;
     else
         throw BookException("All Copies are already returned");
+}
+
+uint16_t Book::getTotalCopies() const { return totalCopies;}
+uint16_t Book::getAvailableCopies() const {return availableCopies; }
+
+void Book::displayBook() const
+{
+    std::cout << "title : " << title << ", Author : " << author << "publicationYear : " << publicationYear;
 }

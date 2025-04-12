@@ -11,6 +11,7 @@ class User
         void borrowBook(const std::string& bookTitle);
         void returnBook(const std::string& bookTitle);
         const std::vector<std::string>& getBorrowedBooks() const;
+        void displayUser() const;
 
     private:
         std::string name;

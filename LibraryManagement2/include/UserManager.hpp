@@ -15,9 +15,10 @@ class UserManager
         bool userExists(const std::string& name) const;
         void userBorrowBook(const std::string& name, const std::string& bookTitle);
         void userReturnBook(const std::string& name, const std::string& bookTitle);
-
+        void displayUser(const std::string& name) const;
+        void displayAllUsers() const;
     private:
-        std::unordered_map<std::string, User> userMap {};
+        std::unordered_map<std::string, User> usersMap {};
 };
 
 

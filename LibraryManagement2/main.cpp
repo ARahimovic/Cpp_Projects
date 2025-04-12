@@ -1,9 +1,17 @@
 #include <iostream>
+#include "LibraryManager.hpp"
+
+
+void test_libraryManger(LibraryManager& libManager)
+{
+
+}
 
 
 int main()
 {
-    std::cout << "hello world" << std::endl;
+    
+    LibraryManager libManager;
 
     return 0;
 }
