@@ -1,0 +1,20 @@
+So we have book entity : title, author, publication year, total copies, available copies 
+we have user entity : user name, user birth date, list of borrowed book 
+
+book manager : create book, delete book, add copies, remove copies 
+user manager : create user, delete user, get user, get which book a user has 
+
+library manager : 
+borrow book (user id, book)
+{
+    check if book is available 
+    decrease available copies
+    add book in the borrowed list of the user
+
+} 
+
+return book (user id, book)
+{
+    increase available copies
+    remove from user borrowed list 
+}
