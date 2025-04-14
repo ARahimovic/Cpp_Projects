@@ -109,3 +109,92 @@ void BookManager::displayAllBooks() const
 }
 
 
+std::vector<std::string> BookManager::getAllBooksTitles() const
+{
+    std::vector<std::string> bookTitles;
+    bookTitles.reserve(bookList.size());
+
+    //a more modern syntax
+    for(const auto& [title, _] : bookList)
+        bookTitles.push_back(title);
+    
+    // for(const auto& book : bookList)
+    //     bookTitles.push_back(book.first);
+
+    return bookTitles;
+}
+
+std::vector<const Book*> BookManager::getAllBooks() const
+{
+    std::vector<const Book*> books;
+    books.reserve(bookList.size());
+
+    for(const auto& [_ , book] : bookList)
+        books.push_back(&book);
+
+    return books;
+}
+
+
+std::vector<const Book*> BookManager::searchByAuthor(const std::string& author) const
+{
+    std::vector<const Book*> booksByAuthor;
+    booksByAuthor.reserve(bookList.size());
+
+
+    if(author.empty())
+        throw emptyAuthorException();
+
+    for(const auto& [_, book] : bookList)
+    {
+        if(book.getAuthor() == author)
+        booksByAuthor.push_back(&book);
+    }   
+
+
+    return booksByAuthor;
+}
+
+
+std::vector<const Book*> BookManager::searchByYear(uint16_t year) const
+{
+    std::vector<const Book*> booksByYear;
+    booksByYear.reserve(bookList.size());
+
+
+    for(const auto& [_, book] : bookList)
+    {
+        if(book.getPublicationYear() == year)
+            booksByYear.push_back(&book);
+    }   
+
+
+    return booksByYear;
+}
+
+size_t BookManager::getTotalBookCount() const
+{
+    size_t total = 0;
+    for(const auto& [_, book] : bookList)
+        total += book.getTotalCopies();
+    
+        return total;       
+}
+
+size_t BookManager::getUniqueBookCount() const
+{
+    return bookList.size();
+}
+
+
+std::vector<const Book*> BookManager::getBorrowedBooks() const
+{
+    std::vector<const Book*> borrowedBooks;
+    for(const auto& [_ , book] : bookList)
+    {
+        if(book.getAvailableCopies() < book.getTotalCopies())
+            borrowedBooks.push_back(&book);
+    }
+
+    return borrowedBooks;
+}

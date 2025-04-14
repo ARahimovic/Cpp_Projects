@@ -102,5 +102,44 @@ void UserManager::displayAllUsers()const
    }
 }
 
+const std::vector<std::string>& UserManager::getUserBorrowedBooks(const std::string& name) const
+{
+    if(name.empty())
+        throw BookException("UserManager::getUserBorrowedBooks , user name cannot be empty");
+
+    return usersMap.at(name).getBorrowedBooks();
+}
+
+std::vector<std::string> UserManager::getAllUserNames() const
+{
+    std::vector<std::string> userNames;
+    userNames.reserve(usersMap.size());
+
+    for(const auto& [userName, _] : usersMap)
+    {
+        userNames.push_back(userName);
+    }
+
+    return userNames;
+}
+
+std::vector<const User*> UserManager::getAllUsers() const
+{
+    std::vector<const User*> userList;
+    userList.reserve(usersMap.size());
+
+    for(const auto& [_, user] : usersMap)
+    {
+        userList.push_back(&user);
+    }
+
+    return userList;
+}
+
+size_t UserManager::getUserCount() const
+{
+    return usersMap.size();
+}
+
 
 
