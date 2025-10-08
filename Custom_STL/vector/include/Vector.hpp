@@ -10,9 +10,10 @@ class MyVector
         int *data_ {};
         size_t size_ {};
         size_t capacity_ {};
+
+        //helper method for copy-swap idiom
+        void swap(Vector rhs) noexcept;
         
-
-
     public:
     
     MyVector(); 

@@ -35,6 +35,59 @@ MyVector::MyVector(MyVector&& rhs) noexcept :size_(rhs.size_),capacity_(rhs.capa
 }
 
 
+void MyVector::swap(MyVector& rhs) noexcept
+{
+    std::swap(size_, rhs.size_);
+    std::swap(capacity_, rhs.capacity_);
+    std::swap(data_, rhs.data_);
+}
+
+//assignment operator using the copy-and-swap idiom
+MyVector& MyVector::operator=(MyVector rhs)
+{
+    std::swap(rhs);
+    return *this;
+}
+
+//move assignment operator
+MyVector& MyVector::operator=(MyVector&& rhs)
+{
+    if(this != &rhs)
+    {
+        delete[] data_;
+        data_ = rhs.data_;
+        size_ = rhs.size_;
+        capacity_ = rhs.capacity_;
+
+        
+        rhs.data_ = nullptr;
+        rhs.size_ = 0;
+        rhs.capacity_ = 0;
+    }
+
+    return *this;
+}
+
+/*
+assignment operator using old style 
+
+MyVector& MyVector::operator=(const MyVector& rhs)
+{
+    if(this == &rhs)
+        return *this; // self-assignment check
+
+    size_ = rhs.size_;
+    capacity_ = rhs.capacity_;
+    delete[] data_;
+    data_ = (capacity_ != 0) ? new int[capacity_] : nullptr;
+    
+    std::copy(rhs.data_, rhs.data_ + rhs.size_, data_);
+    
+    return *this;
+}
+*/
+
+
 size_t MyVector::size() const {   return size_; }
 
 size_t MyVector::capacity() const {return capacity_; }
@@ -55,26 +108,40 @@ int MyVector::front() const
     return *data_;
 }
 
-int MyVector::back() const {
+int MyVector::back() const 
+{
     if empty()
         throw std::out_of_range("back() on empty vector");
 
-    return *(data_ + size_ - 1);}
+    return *(data_ + size_ - 1);
+}
 
+
+void MyVector::reserve(size_t capacity)
+{
+    if(capacity <= capacity_)
+        return;
+
+    //allocate new memory
+    int *newData = new int[capacity];
+
+
+    if(data_ != nullptr && size_ > 0)
+        std::copy(data_, data_ + size_, newData);
+
+    delete[] data_;
+
+    data_ = newData;
+    capacity_ = capacity;
+}
 
 void MyVector::push_back(int value)
 {
     if(size_ == capacity_)
-    {
-        capacity_ = (capacity_ == 0)? 1 : capacity_ * 2;
-        int* ptr = new int[capacity_];
-        std::copy(data_, data_ + size_, ptr);
-        delete[] data_;
-        data_ = ptr;
-    }
+        reserve((capacity_ == 0)? 1 : capacity_ * 2);
+
     data_[size_++] = value;
 }
-
 
 int MyVector::operator[](unsigned int index)
 {
